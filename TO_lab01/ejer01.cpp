@@ -2,9 +2,22 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
+
+// Implementación de ShellSort para ordenar en orden descendente
+void shellSort(vector<int>& arr) {
+    int n = arr.size();
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i += 1) {
+            int temp = arr[i];
+            int j;
+            for (j = i; j >= gap && arr[j - gap] < temp; j -= gap)
+                arr[j] = arr[j - gap];
+            arr[j] = temp;
+        }
+    }
+}
 
 int main() {
     srand(time(nullptr));  // Inicialización del generador de números aleatorios al comienzo del programa.
@@ -42,8 +55,9 @@ int main() {
         return 1;
     }
 
-    // Ordenar de mayor a menor y mostrar
-    sort(numeros.begin(), numeros.end(), greater<int>());
+    // Ordenar de mayor a menor usando ShellSort
+    shellSort(numeros);
+
     cout << (opcion == 'g' ? "Numeros generados" : "Numeros ingresados") << " y ordenados de mayor a menor:" << endl;
     for (int num : numeros) {
         cout << num << " ";
@@ -52,6 +66,3 @@ int main() {
 
     return 0;
 }
-
-// path del archivo: ejer01.cpp
-// how to run: g++ ejer01.cpp -o ejer01
