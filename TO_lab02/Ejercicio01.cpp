@@ -2,70 +2,114 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
-class AnalizadorOperacion {
+class AnalizadorEntrada {
 public:
-    AnalizadorOperacion(const string& operacion) : operacion_(operacion) {}
+    static bool esOperacionValida(const std::string& entrada) {
+        int contadorOperadores = 0;
+        bool esperarOperador = false;
 
-    vector<string> ObtenerOperadores() {
-        vector<string> operadores;
-        size_t inicio = 0;
-
-        for (size_t i = 0; i < operacion_.size(); ++i) {
-            if (operacion_[i] == '+' || operacion_[i] == '-') {
-                operadores.push_back(operacion_.substr(inicio, i - inicio));
-                operadores.push_back(string(1, operacion_[i]));
-                inicio = i + 1;
+        for (char c : entrada) {
+            if (c == '+' || c == '-' || c == '*' || c == '/') {
+                if (!esperarOperador) {
+                    return false;
+                }
+                esperarOperador = false;
+                contadorOperadores++;
+                if (contadorOperadores > 5) {
+                    return false;
+                }
+            } else if (isdigit(c) || c == '.') {
+                esperarOperador = true;
+            } else if (c != ' ') {
+                return false;
             }
         }
-        operadores.push_back(operacion_.substr(inicio));
-
-        return operadores;
+        return esperarOperador && contadorOperadores > 0;
     }
-
-private:
-    string operacion_; // Declaración de la variable operacion_
 };
 
-class AdministradorOperaciones {
+class NucleoCalculadora {
 public:
-    static int RealizarOperacion(int numero1, int numero2, char operador) {
-        if (operador == '+') {
-            return numero1 + numero2;
-        } else if (operador == '-') {
-            return numero1 - numero2;
+    static double calcular(const std::string& entrada) {
+        std::vector<double> numeros;
+        std::vector<char> operadores;
+
+        double numeroActual = 0.0;
+
+        for (char c : entrada) {
+            if (isdigit(c) || c == '.') {
+                numeroActual = numeroActual * 10 + (c - '0');
+            } else if (c == '+' || c == '-' || c == '*' || c == '/') {
+                numeros.push_back(numeroActual);
+                operadores.push_back(c);
+                numeroActual = 0.0;
+            }
         }
-        return 0; // Manejo de error si el operador no es válido
-    }
-};
-
-class ProcesadorOperacion {
-public:
-    static int Procesar(const string& operacion) {
-        AnalizadorOperacion analizador(operacion);
-        vector<string> operadores = analizador.ObtenerOperadores();
-
-        int resultado = stoi(operadores[0]); // Convertir el primer número a entero
-
-        for (size_t i = 1; i < operadores.size(); i += 2) {
-            char operador = operadores[i][0];
-            int numero = stoi(operadores[i + 1]);
-
-            resultado = AdministradorOperaciones::RealizarOperacion(resultado, numero, operador);
+        numeros.push_back(numeroActual);
+        
+        size_t i = 0;
+        while (i < operadores.size()) {
+            if (operadores[i] == '*' || operadores[i] == '/') {
+                double resultado = realizarOperacion(numeros[i], numeros[i + 1], operadores[i]);
+                numeros[i] = resultado;
+                numeros.erase(numeros.begin() + i + 1);
+                operadores.erase(operadores.begin() + i);
+            } else {
+                i++;
+            }
+        }
+        
+        double resultado = numeros[0];
+        for (size_t i = 0; i < operadores.size(); i++) {
+            resultado = realizarOperacion(resultado, numeros[i + 1], operadores[i]);
         }
 
         return resultado;
     }
+    
+private:
+    static double realizarOperacion(double operandoIzquierdo, double operandoDerecho, char operador) {
+        switch (operador) {
+            case '+':
+                return operandoIzquierdo + operandoDerecho;
+            case '-':
+                return operandoIzquierdo - operandoDerecho;
+            case '*':
+                return operandoIzquierdo * operandoDerecho;
+            case '/':
+                if (operandoDerecho != 0.0) {
+                    return operandoIzquierdo / operandoDerecho;
+                } else {
+                    std::cerr << "Error: Division por cero" << std::endl;
+                    exit(1);
+                }
+            default:
+                std::cerr << "Error: Operador no valido" << std::endl;
+                exit(1);
+        }
+    }
+};
+
+class Calculadora {
+public:
+    static double procesarOperacion(const std::string& operacion) {
+        if (!AnalizadorEntrada::esOperacionValida(operacion)) {
+            std::cerr << "Error: Operacion matematica no valida." << std::endl;
+            return 0.0;
+        }
+        return NucleoCalculadora::calcular(operacion);
+    }
 };
 
 int main() {
-    string operacion;
-    cout << "Ingrese una operación matemática: ";
-    cin >> operacion;
+    std::string entrada;
 
-    int resultado = ProcesadorOperacion::Procesar(operacion);
-    cout << "El resultado es: " << resultado << endl;
+    std::cout << "Ingrese la operacion matematica (Como mucho 5 operadores): ";
+    std::getline(std::cin, entrada);
+
+    double resultado = Calculadora::procesarOperacion(entrada);
+
+    std::cout << "Resultado: " << resultado << std::endl;
 
     return 0;
 }
