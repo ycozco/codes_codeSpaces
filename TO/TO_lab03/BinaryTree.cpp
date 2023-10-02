@@ -46,20 +46,30 @@ public:
 
 int main() {
     // Crear un árbol para la expresión (3 + 4) * 2
-    Nodo* tres = new Operand(3);
-    Nodo* cuatro = new Operand(4);
-    Nodo* suma = new Suma(tres, cuatro);
+    Nodo* cinco = new Operand(5);
+    Nodo* tres4 = new Operand(34);
+    Nodo* producto1 = new Suma(cinco, tres4);
 
+    Nodo* uno = new Operand(1);
     Nodo* dos = new Operand(2);
-    Nodo* expresion = new Multiplicacion(suma, dos);
+    Nodo* producto2 = new Multiplicacion(uno, dos);
 
-    std::cout << "(3 + 4) * 2 = " << expresion->evaluar() << std::endl;
+    Nodo* cinco4 = new Operand(54);
+
+    Nodo* expresion1 = new Suma(cinco4, producto1);
+    Nodo* expresion = new Suma(expresion1, producto2);
+
+    std::cout << "54+(5*34)+(1*2)= " << expresion->evaluar() << std::endl;
 
     // Limpieza de memoria
-    delete tres;
-    delete cuatro;
-    delete suma;
+    delete cinco;
+    delete tres4;
+    delete producto1;
+    delete uno;
     delete dos;
+    delete producto2;
+    delete cinco4;
+    delete expresion1;
     delete expresion;
 
     return 0;
