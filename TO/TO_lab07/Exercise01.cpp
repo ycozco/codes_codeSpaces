@@ -152,14 +152,21 @@ public:
         laptop->AddParts(new Printer("Laser"));
         return laptop;
     }
-    // Métodos para añadir Color, Brand, MonitorPlasma, Printer, etc.
 };
 
 int main() {
     LaptopBuilder builder;
     Laptop* myLaptop = builder.BuildBasicLaptop();
+    cout << "Laptop Basica" << endl;
     myLaptop->GetConfiguration();
     cout << "Precio: " << myLaptop->GetCost() << endl;
-    delete myLaptop; // No olvides liberar la memoria
+    cout << endl;
+    LaptopBuilder builder1;
+    cout << "Laptop Avanzada" << endl;
+    Laptop* myLaptop1 = builder.BuildAdvancedLaptop();
+    myLaptop1->GetConfiguration();
+    cout << "Precio: " << myLaptop1->GetCost() << endl;
+    delete myLaptop; 
+    delete myLaptop1;
     return 0;
 }
