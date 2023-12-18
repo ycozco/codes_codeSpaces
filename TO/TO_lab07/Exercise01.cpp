@@ -33,33 +33,33 @@ class IntelI7 : public Processor {
 
 class Drive : public Item {
     virtual string GetName() { return "Drive"; };
-    virtual float GetPrice() {return 0.0; };
-    virtual void GetConfiguration() { ;
-};
+    virtual float GetPrice() {return 0.0; };;
+    virtual void GetConfiguration() { };
+    };
 
-class HDD : public Drive {
-    string GetName(){ return "HDD"; };
-    float GetPrice(){ return 150.00; };
-    void GetConfiguration(){ cout << "capacity 1 TB, data transfer 1050 mbits/s" << endl; };
-};
+    class HDD : public Drive {
+        string GetName(){ return "HDD"; };
+        float GetPrice(){ return 150.00; };
+        void GetConfiguration(){ cout << "capacity 1 TB, data transfer 1050 mbits/s" << endl; };
+    };
 
-class SSD : public Drive {
-    string GetName(){ return "SSD"; };
-    float GetPrice(){ return 270.00; };
-    void GetConfiguration(){ cout << "capacity 250 GB, data transfer 1800 mbits/s" << endl; };
-};
+    class SSD : public Drive {
+        string GetName(){ return "SSD"; };
+        float GetPrice(){ return 270.00; };
+        void GetConfiguration(){ cout << "capacity 250 GB, data transfer 1800 mbits/s" << endl; };
+    };
 
 class DisplayType : public Item {
     virtual string GetName() { return "DisplayType"; };
     virtual float GetPrice() {return 0.0; };
-    virtual void GetConfiguration() { ;
+    virtual void GetConfiguration() {} ;
 };
 
-class Normal : public DisplayType {
-    string GetName(){ return "Non-touch screen: "; };
-    float GetPrice(){ return 195.00; };
-    void GetConfiguration(){ cout << "15.6 inches FHD(192 x 1080 pixels), plane, ...etc" << endl; };
-};
+    class Normal : public DisplayType {
+        string GetName(){ return "Non-touch screen: "; };
+        float GetPrice(){ return 195.00; };
+        void GetConfiguration(){ cout << "15.6 inches FHD(192 x 1080 pixels), plane, ...etc" << endl; };
+    };
 
 // Clase para representar el color de la laptop
 class Color : public Item {
@@ -81,16 +81,23 @@ public:
     void GetConfiguration() override { cout << "Brand: " << brandName << endl; }
 };
 
-// Clase para representar un monitor plasma
 class MonitorPlasma : public Item {
-    // Implementación específica para MonitorPlasma...
+    int size;
+public:
+    MonitorPlasma(int sz) : size(sz) {}
+    string GetName() override { return "Monitor Plasma"; }
+    float GetPrice() override { return size * 100; } // El precio aumenta con el tamaño
+    void GetConfiguration() override { cout << "Monitor Plasma, " << size << " pulgadas" << endl; }
 };
 
-// Clase para representar una impresora
 class Printer : public Item {
-    // Implementación específica para Printer...
+    string type;
+public:
+    Printer(string t) : type(t) {}
+    string GetName() override { return "Printer " + type; }
+    float GetPrice() override { return type == "Laser" ? 800.0 : 400.0; }
+    void GetConfiguration() override { cout << "Printer Type: " << type << endl; }
 };
-
 // Clase Laptop que contiene los componentes
 class Laptop {
     vector<Item*> mLaptopParts;
@@ -113,9 +120,11 @@ public:
             delete item;
         }
     }
+private : 
+    vector <Item*> mLaptopParts;
 };
 
-private: vector<item> mLaptopParts;
+
 
 // Clase LaptopBuilder que sigue el patrón Builder
 class LaptopBuilder {
@@ -137,7 +146,7 @@ public:
     // Métodos para añadir Color, Brand, MonitorPlasma, Printer, etc.
 };
 
-class IntelI5 : public Processor {
+/*class IntelI5 : public Processor {
 public:
     string GetName() override { return "Intel I5"; }
     float GetPrice() override { return 200.0; }
@@ -149,7 +158,7 @@ public:
     string GetName() override { return "Intel I7"; }
     float GetPrice() override { return 300.0; }
     void GetConfiguration() override { cout << "Processor: Intel I7" << endl; }
-};
+};*/
 
 int main() {
     LaptopBuilder builder;
