@@ -100,7 +100,7 @@ public:
 };
 // Clase Laptop que contiene los componentes
 class Laptop {
-    vector<Item*> mLaptopParts;
+    
 public:
     void AddParts(Item* item) { mLaptopParts.push_back(item); }
     float GetCost() {
@@ -134,31 +134,26 @@ public:
         laptop->AddParts(new IntelI5());
         laptop->AddParts(new Normal());
         laptop->AddParts(new HDD());
+        laptop->AddParts(new Color("Black"));
+        laptop->AddParts(new Brand("HP"));
+        laptop->AddParts(new MonitorPlasma(13));
+        laptop->AddParts(new Printer("Inkjet"));
+
         return laptop;
     }
     Laptop* BuildAdvancedLaptop() {
         Laptop* laptop = new Laptop();
         laptop->AddParts(new IntelI7());
         laptop->AddParts(new Normal());
-        laptop->AddParts(new SSD()); 
+        laptop->AddParts(new SSD());
+        laptop->AddParts(new Color("Grey"));
+        laptop->AddParts(new Brand("Dell")); 
+        laptop->AddParts(new MonitorPlasma(15));
+        laptop->AddParts(new Printer("Laser"));
         return laptop;
     }
     // Métodos para añadir Color, Brand, MonitorPlasma, Printer, etc.
 };
-
-/*class IntelI5 : public Processor {
-public:
-    string GetName() override { return "Intel I5"; }
-    float GetPrice() override { return 200.0; }
-    void GetConfiguration() override { cout << "Processor: Intel I5" << endl; }
-};
-
-class IntelI7 : public Processor {
-public:
-    string GetName() override { return "Intel I7"; }
-    float GetPrice() override { return 300.0; }
-    void GetConfiguration() override { cout << "Processor: Intel I7" << endl; }
-};*/
 
 int main() {
     LaptopBuilder builder;
